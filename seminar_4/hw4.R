@@ -1,42 +1,20 @@
 install.packages('ape')
 library(ape)
 
-seq = ape::read.dna("C:/dev/hse-adbm-r/seminar_4/sequence.fasta", format="fasta")
-s = paste(as.character(seq)[1, ], collapse = "")[1]
-rm(seq)
-gc()
-nchar(s)
+s = paste(as.character(
+  ape::read.dna("./sequence.fasta", format="fasta")
+)[1, ], collapse = "")[1]
 
-nucs = c("a", "t", "c", "g")
-mx = 0
-mn = 5132068
-mxseq = ""
-mnseq = ""
+sp = 1:(nchar(s) - 5)
 
-fn("")
+# Возьмем вектор стартов и сделаем из него вектор подстрок 
+ss = sapply(sp, function(sp) {
+  substring(s, sp, sp + 5)
+})
 
-fn = function(cw) {
-  if(nchar(cw) == 6) {
-    t = co(s, cw)
-    if(t > mx) {
-      mx = t
-      mxseq = cw
-    }
-    if(t < mn) {
-      mn = t
-      mnseq = cw
-    }
-    return;
-  }
-  
-  for(i in 1:4) {
-    cw = paste0(cw, nucs[i])
-    fn(cw)
-    cw = substr(cw, 1, nchar(cw) - 1)
-  }
-}
+# Двы самых редких
+print(sort(table(ss))[1:2])
 
-co = function(st, let) {
-  m = gregexpr(let, st)
-  return(sum(unlist(m) != -1))
-}
+# Два самых частых
+print(sort(table(ss), decreasing = TRUE)[1:2])
+
