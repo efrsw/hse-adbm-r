@@ -1,17 +1,31 @@
 install.packages('ape')
 library(ape)
 
-seq = ape::read.dna("./sequence.fasta", format="fasta")
-nucs = c("A", "T", "C", "G")
+seq = ape::read.dna("C:/dev/hse-adbm-r/seminar_4/sequence.fasta", format="fasta")
+s = paste(as.character(seq)[1, ], collapse = "")[1]
+rm(seq)
+gc()
+nchar(s)
 
-maxSeq <- ""
-minSeq <- ""
-maxOcc <- 0
-minOcc <- length(seq)
+nucs = c("a", "t", "c", "g")
+mx = 0
+mn = 5132068
+mxseq = ""
+mnseq = ""
+
+fn("")
 
 fn = function(cw) {
   if(nchar(cw) == 6) {
-    co()
+    t = co(s, cw)
+    if(t > mx) {
+      mx = t
+      mxseq = cw
+    }
+    if(t < mn) {
+      mn = t
+      mnseq = cw
+    }
     return;
   }
   
@@ -26,4 +40,3 @@ co = function(st, let) {
   m = gregexpr(let, st)
   return(sum(unlist(m) != -1))
 }
-
